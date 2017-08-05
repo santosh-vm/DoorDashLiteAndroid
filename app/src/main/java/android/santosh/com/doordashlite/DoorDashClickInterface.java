@@ -6,4 +6,5 @@ package android.santosh.com.doordashlite;
 
 public interface DoorDashClickInterface {
     void onFavoriteSelected(int position, boolean newIsFavorite, Restaurant restaurant);
+    void onRestaurantSelected(int position, Restaurant restaurant);
 }

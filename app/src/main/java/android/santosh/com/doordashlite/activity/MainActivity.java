@@ -1,5 +1,6 @@
 package android.santosh.com.doordashlite.activity;
 
+import android.content.Intent;
 import android.santosh.com.doordashlite.DoorDashClickInterface;
 import android.santosh.com.doordashlite.DoorDashListener;
 import android.santosh.com.doordashlite.R;
@@ -81,5 +82,11 @@ public class MainActivity extends BaseActivity implements DoorDashListener, Door
     public void onFavoriteSelected(int position, boolean newIsFavorite, Restaurant restaurant) {
         Log.d(TAG, "onFavoriteSelected, position: " + position + ", restaurant: " + restaurant + ", newIsFavorite: " + newIsFavorite);
         doorDashAPI.getDoorDashController().updateRestaurantFavoriteStatus(position, newIsFavorite, restaurant);
+    }
+
+    @Override
+    public void onRestaurantSelected(int position, Restaurant restaurant) {
+        Log.d(TAG,"onRestaurantSelected position: "+position+", name: "+restaurant.getName()+", restaurant id: "+restaurant.getId());
+        startActivity(new Intent(this, DetailsActivity.class));
     }
 }

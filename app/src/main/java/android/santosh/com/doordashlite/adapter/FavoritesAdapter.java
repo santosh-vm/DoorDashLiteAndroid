@@ -56,6 +56,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             restaurantViewHolder.favoriteView.setOnClickListener(new FavoriteViewClickListener(position, doorDashClickInterface, restaurant));
+            restaurantViewHolder.rootLayout.setOnClickListener(new RootViewClickListener(position, restaurant, doorDashClickInterface));
         }
     }
 
@@ -86,6 +87,23 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    private class RootViewClickListener implements View.OnClickListener {
+        private int position;
+        private Restaurant restaurant;
+        private DoorDashClickInterface doorDashClickInterface;
+
+        RootViewClickListener(int position, Restaurant restaurant, DoorDashClickInterface doorDashClickInterface) {
+            this.position = position;
+            this.restaurant = restaurant;
+            this.doorDashClickInterface = doorDashClickInterface;
+        }
+
+        @Override
+        public void onClick(View view) {
+            doorDashClickInterface.onRestaurantSelected(position, restaurant);
+        }
+    }
+
     private class FavoriteViewClickListener implements View.OnClickListener {
         private int position;
         private DoorDashClickInterface doorDashClickInterface;
@@ -100,9 +118,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         public void onClick(View view) {
             if (restaurant.isFavorite()) {
-                doorDashClickInterface.onFavoriteSelected(position,false,restaurant);
+                doorDashClickInterface.onFavoriteSelected(position, false, restaurant);
             } else {
-                doorDashClickInterface.onFavoriteSelected(position,true,restaurant);
+                doorDashClickInterface.onFavoriteSelected(position, true, restaurant);
             }
         }
     }
