@@ -15,7 +15,7 @@ public class DoorDashApplication extends Application {
         super.onCreate();
 
         SharedPreferencesWrapper sharedPreferencesWrapper = new SharedPreferencesWrapper(this);
-        DoorDashController doorDashController = new DoorDashController(new Handler());
+        DoorDashController doorDashController = new DoorDashController(new Handler(), sharedPreferencesWrapper);
         doorDashAPI = new DoorDashAPI(doorDashController, sharedPreferencesWrapper);
 
     }

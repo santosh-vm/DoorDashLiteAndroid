@@ -47,4 +47,12 @@ public class Restaurant {
     public int getDeliveryFee() {
         return deliveryFee;
     }
+
+    public void setFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
+    }
+
+    public boolean isFavorite(){
+        return isFavorite;
+    }
 }
