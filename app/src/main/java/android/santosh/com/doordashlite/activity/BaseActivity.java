@@ -12,10 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 
 public class BaseActivity extends AppCompatActivity {
     protected DoorDashAPI doorDashAPI;
+    protected static String RESTAURANT_DETAIL_RESTAURANT_ID_INTENT_KEY = "restaurant_id";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        doorDashAPI = ((DoorDashApplication)getApplication()).getDoorDashAPI();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+        doorDashAPI = ((DoorDashApplication) getApplication()).getDoorDashAPI();
     }
 }

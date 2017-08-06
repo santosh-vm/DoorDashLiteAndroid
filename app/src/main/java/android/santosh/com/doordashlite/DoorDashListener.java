@@ -7,6 +7,9 @@ import java.util.List;
  */
 
 public interface DoorDashListener {
-    void onHotelListFetchSuccess(List<Restaurant> restaurantList);
-    void onHotelListFetchFailure();
+    void onRestaurantListFetchSuccess(List<Restaurant> restaurantList);
+    void onRestaurantListFetchFailure();
+
+    void onRestaurantDetailFetchSuccess(Restaurant restaurant);
+    void onRestaurantDetailFetchFailure();
 }

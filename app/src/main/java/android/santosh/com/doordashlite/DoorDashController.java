@@ -49,7 +49,7 @@ public class DoorDashController {
         this.sharedPreferencesWrapper = sharedPreferencesWrapper;
     }
 
-    public void getHotelList(final double latitude, final double longitude) {
+    public void getRestaurantList(final double latitude, final double longitude) {
         if (executorService != null && !executorService.isShutdown()) {
             executorService.execute(new Runnable() {
                 @Override
@@ -68,27 +68,61 @@ public class DoorDashController {
                                     restaurantList = Arrays.asList(gson.fromJson(stringyfiedJson, Restaurant[].class));
                                     if (restaurantList.size() > 0) {
                                         Log.d(TAG, "From Network restaurantList.size(): " + restaurantList.size());
-                                        refreshHotelList();
+                                        refreshRestaurantList();
                                     } else {
-                                        notifyHotelListFetchFailure();
+                                        notifyRestaurantListFetchFailure();
                                     }
                                     break;
                                 default:
-                                    notifyHotelListFetchFailure();
+                                    notifyRestaurantListFetchFailure();
                                     break;
                             }
                         } else {
                             Log.d(TAG, "From Memory restaurantList.size(): " + restaurantList.size());
-                            refreshHotelList();
+                            refreshRestaurantList();
                         }
                     } catch (IOException iex) {
                         Log.e(TAG, "IOException Caught:\n" + iex);
-                        notifyHotelListFetchFailure();
+                        notifyRestaurantListFetchFailure();
                     }
                 }
             });
         } else {
-            notifyHotelListFetchFailure();
+            notifyRestaurantListFetchFailure();
+        }
+    }
+
+    public void getRestaurantDetails(final int restaurantId) {
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Request request = new Request.Builder()
+                                .url(String.format(HOTEL_DETAIL_URL, restaurantId))
+                                .build();
+                        Response response = client.newCall(request).execute();
+                        String stringyfiedJson = new String(response.body().bytes(), "UTF-8");
+                        switch (response.code()) {
+                            case 200:
+                                Restaurant restaurant = gson.fromJson(stringyfiedJson, Restaurant.class);
+                                if (restaurant != null) {
+                                    notifyRestaurantDetailFetchSuccess(restaurant);
+                                } else {
+                                    notifyRestaurantDetailFetchFailure();
+                                }
+                                break;
+                            default:
+                                notifyRestaurantDetailFetchFailure();
+                                break;
+                        }
+                    } catch (IOException iex) {
+                        notifyRestaurantDetailFetchFailure();
+                    }
+                }
+            });
+        } else {
+            notifyRestaurantDetailFetchFailure();
         }
     }
 
@@ -106,12 +140,12 @@ public class DoorDashController {
                 }
             }
             sharedPreferencesWrapper.saveHotelFavoriteSetAsString(gson.toJson(favoriteSet));
-            notifyHotelListFetchSuccess(restaurantList);
+            notifyRestaurantListFetchSuccess(restaurantList);
             Log.d(TAG, "After marking restaurant with id: " + restaurant.getId() + ", favoriteSet: " + favoriteSet);
         }
     }
 
-    private synchronized void refreshHotelList() {
+    private synchronized void refreshRestaurantList() {
         loadFavoriteSetFromSharedPref();
         if (favoriteSet.size() > 0) {
             for (Restaurant restaurant : restaurantList) {
@@ -128,7 +162,7 @@ public class DoorDashController {
                 return b2 - b1;
             }
         });
-        notifyHotelListFetchSuccess(restaurantList);
+        notifyRestaurantListFetchSuccess(restaurantList);
     }
 
     private void loadFavoriteSetFromSharedPref() {
@@ -155,26 +189,52 @@ public class DoorDashController {
         }
     }
 
-    private void notifyHotelListFetchSuccess(final List<Restaurant> restaurantList) {
+    private void notifyRestaurantListFetchSuccess(final List<Restaurant> restaurantList) {
         if (doorDashListenerList != null && doorDashListenerList.size() > 0) {
             for (final DoorDashListener doorDashListener : doorDashListenerList) {
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        doorDashListener.onHotelListFetchSuccess(restaurantList);
+                        doorDashListener.onRestaurantListFetchSuccess(restaurantList);
                     }
                 });
             }
         }
     }
 
-    private void notifyHotelListFetchFailure() {
+    private void notifyRestaurantListFetchFailure() {
         if (doorDashListenerList != null && doorDashListenerList.size() > 0) {
             for (final DoorDashListener doorDashListener : doorDashListenerList) {
                 uiHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        doorDashListener.onHotelListFetchFailure();
+                        doorDashListener.onRestaurantListFetchFailure();
+                    }
+                });
+            }
+        }
+    }
+
+    private void notifyRestaurantDetailFetchSuccess(final Restaurant restaurant) {
+        if (doorDashListenerList != null && doorDashListenerList.size() > 0) {
+            for (final DoorDashListener doorDashListener : doorDashListenerList) {
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        doorDashListener.onRestaurantDetailFetchSuccess(restaurant);
+                    }
+                });
+            }
+        }
+    }
+
+    private void notifyRestaurantDetailFetchFailure() {
+        if (doorDashListenerList != null && doorDashListenerList.size() > 0) {
+            for (final DoorDashListener doorDashListener : doorDashListenerList) {
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        doorDashListener.onRestaurantDetailFetchFailure();
                     }
                 });
             }

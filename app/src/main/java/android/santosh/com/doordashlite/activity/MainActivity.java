@@ -28,12 +28,11 @@ public class MainActivity extends BaseActivity implements DoorDashListener, Door
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_main);
         bindUIElements();
         doorDashAPI.getDoorDashController().addDoorDashListener(this);
         //Currently Hardcoding latitude and longitude to  Doordash HQ
-        doorDashAPI.getDoorDashController().getHotelList(DOORDASH_HQ_LATITUDE, DOORDASH_HQ_LONGITUDE);
+        doorDashAPI.getDoorDashController().getRestaurantList(DOORDASH_HQ_LATITUDE, DOORDASH_HQ_LONGITUDE);
     }
 
     private void bindUIElements() {
@@ -61,8 +60,8 @@ public class MainActivity extends BaseActivity implements DoorDashListener, Door
     }
 
     @Override
-    public void onHotelListFetchSuccess(List<Restaurant> restaurantList) {
-        Log.d(TAG, "onHotelListFetchSuccess restaurantList.size(): " + restaurantList.size());
+    public void onRestaurantListFetchSuccess(List<Restaurant> restaurantList) {
+        Log.d(TAG, "onRestaurantListFetchSuccess restaurantList.size(): " + restaurantList.size());
         progressBar.setVisibility(View.GONE);
         restaurantsRecyclerView.setVisibility(View.VISIBLE);
         favoritesAdapter.setRestaurantList(restaurantList);
@@ -71,8 +70,8 @@ public class MainActivity extends BaseActivity implements DoorDashListener, Door
     }
 
     @Override
-    public void onHotelListFetchFailure() {
-        Log.d(TAG, "onHotelListFetchFailure.");
+    public void onRestaurantListFetchFailure() {
+        Log.d(TAG, "onRestaurantListFetchFailure.");
         progressBar.setVisibility(View.GONE);
         errorMessageTextView.setVisibility(View.VISIBLE);
         restaurantsRecyclerView.setVisibility(View.GONE);
@@ -87,6 +86,18 @@ public class MainActivity extends BaseActivity implements DoorDashListener, Door
     @Override
     public void onRestaurantSelected(int position, Restaurant restaurant) {
         Log.d(TAG,"onRestaurantSelected position: "+position+", name: "+restaurant.getName()+", restaurant id: "+restaurant.getId());
-        startActivity(new Intent(this, DetailsActivity.class));
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(RESTAURANT_DETAIL_RESTAURANT_ID_INTENT_KEY,restaurant.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRestaurantDetailFetchSuccess(Restaurant restaurant) {
+
+    }
+
+    @Override
+    public void onRestaurantDetailFetchFailure() {
+
     }
 }
