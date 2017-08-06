@@ -139,7 +139,7 @@ public class DoorDashController {
                     favoriteSet.remove(restaurantId);
                 }
             }
-            sharedPreferencesWrapper.saveHotelFavoriteSetAsString(gson.toJson(favoriteSet));
+            sharedPreferencesWrapper.saveRestaurantFavoriteSetAsString(gson.toJson(favoriteSet));
             notifyRestaurantListFetchSuccess(restaurantList);
             Log.d(TAG, "After marking restaurant with id: " + restaurant.getId() + ", favoriteSet: " + favoriteSet);
         }
@@ -166,7 +166,7 @@ public class DoorDashController {
     }
 
     private void loadFavoriteSetFromSharedPref() {
-        String stringifiedSet = sharedPreferencesWrapper.getHotelFavoriteSetAsString();
+        String stringifiedSet = sharedPreferencesWrapper.getRestaurantFavoriteSetAsString();
         if (!TextUtils.isEmpty(stringifiedSet)) {
             Type hashSetType = new TypeToken<HashSet<Integer>>() {
             }.getType();

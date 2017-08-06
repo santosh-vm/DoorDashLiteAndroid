@@ -18,11 +18,11 @@ public class SharedPreferencesWrapper {
         this.preferences = context.getSharedPreferences(context.getPackageName() + "app_prefs", Context.MODE_PRIVATE);
     }
 
-    public String getHotelFavoriteSetAsString() {
+    public String getRestaurantFavoriteSetAsString() {
         return getStringValue(HOTEL_FAVORITE_LIST);
     }
 
-    public void saveHotelFavoriteSetAsString(String hotelFavoriteListString) {
+    public void saveRestaurantFavoriteSetAsString(String hotelFavoriteListString) {
         saveStringValue(HOTEL_FAVORITE_LIST, hotelFavoriteListString);
     }
 
