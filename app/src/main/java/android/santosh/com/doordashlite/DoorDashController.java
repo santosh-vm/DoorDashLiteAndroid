@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -59,7 +60,7 @@ public class DoorDashController {
                         //and refresh database by making network once every hour.
                         if (restaurantList.size() <= 0) {
                             Request request = new Request.Builder()
-                                    .url(String.format(HOTEL_LIST_URL, latitude, longitude))
+                                    .url(String.format(Locale.US, HOTEL_LIST_URL, latitude, longitude))
                                     .build();
                             Response response = client.newCall(request).execute();
                             String stringyfiedJson = new String(response.body().bytes(), "UTF-8");
@@ -99,7 +100,7 @@ public class DoorDashController {
                 public void run() {
                     try {
                         Request request = new Request.Builder()
-                                .url(String.format(HOTEL_DETAIL_URL, restaurantId))
+                                .url(String.format(Locale.US, HOTEL_DETAIL_URL, restaurantId))
                                 .build();
                         Response response = client.newCall(request).execute();
                         String stringyfiedJson = new String(response.body().bytes(), "UTF-8");
